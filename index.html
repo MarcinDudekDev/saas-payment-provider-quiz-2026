@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Provider Quiz - Find the Best Payment Solution for Your SaaS</title>
+    <meta name="description" content="Answer 5 simple questions to find the perfect payment provider for your SaaS business. Compare Stripe, Paddle, Polar, LemonSqueezy, and more.">
+    <link rel="canonical" href="https://marcindudek.dev/payment-quiz">
+
+    <link rel="preconnect" href="https://marcindudek.dev">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💳</text></svg>">
+
+    <meta property="og:title" content="Payment Provider Quiz - Find Your Perfect Match">
+    <meta property="og:description" content="5 questions to find the best payment provider for your SaaS. Stripe vs Paddle vs Polar vs LemonSqueezy compared.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://marcindudek.dev/payment-quiz">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Payment Provider Quiz">
+    <meta name="twitter:description" content="Find the perfect payment provider for your SaaS in under 2 minutes.">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Quiz",
+        "name": "Payment Provider Selection Quiz",
+        "description": "A decision-tree quiz helping SaaS founders choose between Stripe, Paddle, Polar, LemonSqueezy, DodoPayments, and FastSpring based on their business needs.",
+        "educationalLevel": "Professional",
+        "about": {"@type": "Thing", "name": "Payment Processing"},
+        "author": {"@type": "Person", "name": "Marcin Dudek", "url": "https://marcindudek.dev"},
+        "provider": {"@type": "Person", "name": "Marcin Dudek", "url": "https://marcindudek.dev"}
+    }
+    </script>
+
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        html{-webkit-text-size-adjust:100%}
+
+        /* Warm coral/rose gradient - neutral, no provider colors */
+        body{
+            font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            background:linear-gradient(135deg,#f97316 0%,#db2777 50%,#7c3aed 100%);
+            background-size:200% 200%;
+            animation:gradientShift 15s ease infinite;
+            min-height:100vh;
+            min-height:100dvh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            padding-bottom:80px
+        }
+
+        @keyframes gradientShift{
+            0%,100%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+        }
+
+        .quiz-container{
+            background:#fff;
+            border-radius:24px;
+            box-shadow:0 25px 50px -12px rgba(0,0,0,.25);
+            max-width:500px;
+            width:100%;
+            overflow:hidden;
+            contain:layout style paint
+        }
+
+        .progress-bar{height:4px;background:#e5e7eb}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#f97316,#db2777);transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+        .quiz-content{
+            padding:clamp(24px,6vw,40px);
+            min-height:380px;
+            display:flex;
+            flex-direction:column
+        }
+
+        .question-number{
+            font-size:12px;
+            font-weight:600;
+            color:#9ca3af;
+            text-transform:uppercase;
+            letter-spacing:1px;
+            margin-bottom:8px;
+            opacity:0;
+            animation:fadeInDown .4s ease forwards
+        }
+
+        .question{
+            font-size:clamp(18px,5vw,24px);
+            font-weight:700;
+            color:#1f2937;
+            line-height:1.3;
+            margin-bottom:24px;
+            min-height:85px;
+            opacity:0;
+            animation:fadeInDown .4s ease .1s forwards
+        }
+
+        .options{
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            margin-top:auto
+        }
+
+        .option{
+            padding:16px 20px;
+            border:2px solid #e5e7eb;
+            border-radius:12px;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:500;
+            color:#374151;
+            -webkit-tap-highlight-color:transparent;
+            opacity:0;
+            transform:translateY(10px);
+            animation:fadeInUp .4s ease forwards;
+            transition:border-color .15s,background .15s,transform .15s
+        }
+        .option:nth-child(1){animation-delay:.2s}
+        .option:nth-child(2){animation-delay:.3s}
+
+        .option:hover,.option:focus{
+            border-color:#db2777;
+            background:#fdf2f8;
+            outline:none;
+            transform:translateY(-2px)
+        }
+        .option:active{transform:scale(.98)}
+
+        /* Animations */
+        @keyframes fadeInDown{
+            from{opacity:0;transform:translateY(-10px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        @keyframes fadeInUp{
+            from{opacity:0;transform:translateY(10px)}
+            to{opacity:1;transform:translateY(0)}
+        }
+        @keyframes scaleIn{
+            from{opacity:0;transform:scale(.9)}
+            to{opacity:1;transform:scale(1)}
+        }
+        @keyframes bounceIn{
+            0%{opacity:0;transform:scale(.3)}
+            50%{transform:scale(1.05)}
+            70%{transform:scale(.9)}
+            100%{opacity:1;transform:scale(1)}
+        }
+
+        .questions{transition:opacity .3s ease}
+        .questions.fade-out{opacity:0;pointer-events:none}
+        .questions.hide{display:none}
+
+        .result{display:none;text-align:center;flex-direction:column;min-height:300px}
+        .result.show{display:flex}
+
+        .result-icon{
+            width:80px;
+            height:80px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:40px;
+            margin:0 auto 24px;
+            opacity:0;
+            animation:bounceIn .6s cubic-bezier(.68,-.55,.265,1.55) forwards
+        }
+
+        .result-title{
+            font-size:clamp(22px,6vw,28px);
+            font-weight:700;
+            margin-bottom:8px;
+            opacity:0;
+            animation:fadeInUp .4s ease .2s forwards
+        }
+        .result-title a{color:#1f2937;text-decoration:none}
+        .result-title a:hover{text-decoration:underline}
+
+        .result-fee{
+            font-size:18px;
+            color:#6b7280;
+            margin-bottom:16px;
+            opacity:0;
+            animation:fadeInUp .4s ease .3s forwards
+        }
+
+        .result-desc{
+            font-size:15px;
+            color:#6b7280;
+            line-height:1.6;
+            margin-bottom:20px;
+            opacity:0;
+            animation:fadeInUp .4s ease .4s forwards
+        }
+
+        .result-link{
+            display:inline-block;
+            color:#db2777;
+            font-weight:500;
+            text-decoration:none;
+            margin-bottom:24px;
+            font-size:14px;
+            opacity:0;
+            animation:fadeInUp .4s ease .5s forwards
+        }
+        .result-link:hover{text-decoration:underline}
+
+        .restart{
+            background:linear-gradient(135deg,#f97316 0%,#db2777 100%);
+            color:#fff;
+            border:none;
+            padding:14px 28px;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            -webkit-tap-highlight-color:transparent;
+            margin-top:auto;
+            opacity:0;
+            animation:fadeInUp .4s ease .6s forwards;
+            transition:transform .2s,box-shadow .2s
+        }
+        .restart:hover,.restart:focus{
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(219,39,119,.3);
+            outline:none
+        }
+        .restart:active{transform:translateY(0)}
+
+        .provider-stripe{background:#635BFF;color:#fff}
+        .provider-paypal{background:#003087;color:#fff}
+        .provider-paddle{background:#FFCC00;color:#000}
+        .provider-polar{background:#0062FF;color:#fff}
+        .provider-dodo{background:#10B981;color:#fff}
+        .provider-lemon{background:#FFC233;color:#000}
+        .provider-fastspring{background:#00A651;color:#fff}
+
+        .badge{
+            position:fixed;
+            bottom:0;
+            left:0;
+            right:0;
+            display:flex;
+            justify-content:center;
+            padding:16px;
+            background:linear-gradient(to top,rgba(0,0,0,.15),transparent);
+            pointer-events:none;
+            z-index:100
+        }
+        .badge a{
+            pointer-events:auto;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 18px;
+            background:rgba(255,255,255,.95);
+            color:#1e293b;
+            border-radius:999px;
+            text-decoration:none;
+            font-size:13px;
+            font-weight:500;
+            box-shadow:0 4px 12px rgba(0,0,0,.15);
+            transition:transform .2s,box-shadow .2s
+        }
+        .badge a:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.2)}
+        .badge img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+
+        @media(max-width:480px){
+            body{padding:12px;padding-bottom:72px}
+            .quiz-container{border-radius:16px}
+            .quiz-content{min-height:340px}
+            .option{padding:14px 16px;font-size:15px}
+            .result-icon{width:64px;height:64px;font-size:32px}
+            .question{min-height:70px}
+        }
+
+        @media(prefers-reduced-motion:reduce){
+            *{transition:none!important;animation:none!important}
+            .question-number,.question,.option,.result-icon,.result-title,.result-fee,.result-desc,.result-link,.restart{opacity:1;transform:none}
+            body{animation:none;background-position:0% 50%}
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width:20%"></div>
+        </div>
+        <div class="quiz-content">
+            <div class="questions" id="questions">
+                <p class="question-number" id="qNum">Question 1 of 5</p>
+                <h1 class="question" id="qText">Do you need someone else to handle global tax compliance (VAT, GST, sales tax)?</h1>
+                <div class="options" id="options" role="listbox" aria-label="Answer options"></div>
+            </div>
+            <div class="result" id="result" aria-live="polite">
+                <div class="result-icon" id="resultIcon" aria-hidden="true">💳</div>
+                <h2 class="result-title"><a id="resultHome" href="#" target="_blank" rel="noopener">Stripe</a></h2>
+                <p class="result-fee" id="resultFee">2.9% + $0.30</p>
+                <p class="result-desc" id="resultDesc">Best for developers who want full control.</p>
+                <a class="result-link" id="resultLink" href="#" target="_blank" rel="noopener">View Documentation →</a>
+                <button class="restart" onclick="restart()" type="button">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="badge">
+        <a href="https://marcindudek.dev" target="_blank" rel="dofollow">
+            <img src="https://marcindudek.dev/images/headshot.png" alt="" width="24" height="24" loading="lazy">
+            Built by Marcin Dudek
+        </a>
+    </footer>
+
+    <script>
+        const Q=[
+            {q:"Do you need someone else to handle global tax compliance (VAT, GST, sales tax)?",o:[{t:"Yes, I don't want to deal with taxes",n:1},{t:"No, I'll handle it myself (or US-only)",n:10}]},
+            {q:"Is keeping fees under 5% critical for your margins?",o:[{t:"Yes, every percent matters",n:2},{t:"No, I'll pay more for features",n:3}]},
+            {q:"Are you building developer tools or open source?",o:[{t:"Yes, dev-focused product",r:"polar"},{t:"No, general SaaS/digital product",r:"dodo"}]},
+            {q:"Are you selling to enterprise/B2B customers who need invoicing and POs?",o:[{t:"Yes, B2B with enterprise needs",n:4},{t:"No, mostly B2C or small teams",n:5}]},
+            {q:"Do you need complex licensing or sell gaming/software keys?",o:[{t:"Yes, complex licensing needs",r:"fastspring"},{t:"No, standard SaaS subscriptions",r:"paddle"}]},
+            {q:"Are you scaling past $50K MRR or need advanced checkout recovery?",o:[{t:"Yes, scaling fast",r:"paddle"},{t:"No, still early stage",r:"lemon"}]},
+            null,null,null,null,
+            {q:"Is consumer brand recognition important for your checkout?",o:[{t:"Yes, customers trust PayPal",r:"both"},{t:"No, card payments are fine",r:"stripe"}]}
+        ];
+        const R={
+            stripe:{i:"💳",t:"Stripe",f:"2.9% + $0.30",d:"The developer's choice. Maximum control, best APIs, lowest fees. You handle tax compliance yourself.",c:"provider-stripe",h:"https://stripe.com",l:"https://stripe.com/docs"},
+            both:{i:"🤝",t:"Stripe + PayPal",f:"2.9% primary + PayPal option",d:"Use Stripe as your primary processor, offer PayPal at checkout for customers who prefer it.",c:"provider-stripe",h:"https://stripe.com",l:"https://stripe.com/docs/payments/paypal"},
+            polar:{i:"⚡",t:"Polar",f:"4% + $0.40",d:"Built for developers and open source. GitHub-native, handles all taxes, best value MoR.",c:"provider-polar",h:"https://polar.sh",l:"https://docs.polar.sh"},
+            dodo:{i:"🦤",t:"DodoPayments",f:"4% + $0.40",d:"Same great rate as Polar but for general SaaS. 220+ countries, indie-founder focused.",c:"provider-dodo",h:"https://dodopayments.com",l:"https://docs.dodopayments.com"},
+            paddle:{i:"🏓",t:"Paddle",f:"5% + $0.50",d:"The mature choice for scaling SaaS. Best analytics, checkout recovery, B2B features.",c:"provider-paddle",h:"https://paddle.com",l:"https://developer.paddle.com/getting-started/overview"},
+            lemon:{i:"🍋",t:"LemonSqueezy",f:"5% + $0.50",d:"Simple and indie-friendly. Now owned by Stripe. Great for getting started quickly.",c:"provider-lemon",h:"https://lemonsqueezy.com",l:"https://docs.lemonsqueezy.com"},
+            fastspring:{i:"🚀",t:"FastSpring",f:"~5-8% custom",d:"Enterprise-grade for software and gaming. Complex licensing, global compliance.",c:"provider-fastspring",h:"https://fastspring.com",l:"https://docs.fastspring.com"}
+        };
+        let c=0;
+        const $=id=>document.getElementById(id);
+
+        function render(animate=true){
+            const q=Q[c];
+            const questions=$('questions');
+
+            if(animate){
+                questions.classList.add('fade-out');
+                setTimeout(()=>{
+                    updateContent(q);
+                    questions.classList.remove('fade-out');
+                    // Re-trigger animations
+                    $('qNum').style.animation='none';
+                    $('qText').style.animation='none';
+                    void $('qNum').offsetWidth;
+                    $('qNum').style.animation='';
+                    $('qText').style.animation='';
+                },300);
+            }else{
+                updateContent(q);
+            }
+        }
+
+        function updateContent(q){
+            $('qNum').textContent=`Question ${Math.min(c+1,5)} of 5`;
+            $('qText').textContent=q.q;
+            $('progress').style.width=`${((c+1)/5)*100}%`;
+            $('options').innerHTML=q.o.map((o,i)=>
+                `<div class="option" role="option" tabindex="0" style="animation-delay:${.2+i*.1}s" onclick="ans(${i})" onkeydown="if(event.key==='Enter')ans(${i})">${o.t}</div>`
+            ).join('');
+        }
+
+        function ans(i){
+            const o=Q[c].o[i];
+            if(o.r){
+                show(o.r);
+            }else{
+                c=o.n;
+                render(true);
+            }
+        }
+
+        function show(k){
+            const r=R[k];
+            const questions=$('questions');
+            questions.classList.add('fade-out');
+
+            setTimeout(()=>{
+                questions.classList.add('hide');
+                questions.classList.remove('fade-out');
+                $('result').classList.add('show');
+                $('resultIcon').textContent=r.i;
+                $('resultIcon').className=`result-icon ${r.c}`;
+                $('resultHome').textContent=r.t;
+                $('resultHome').href=r.h;
+                $('resultFee').textContent=r.f;
+                $('resultDesc').textContent=r.d;
+                $('resultLink').href=r.l;
+                $('progress').style.width='100%';
+            },300);
+        }
+
+        function restart(){
+            c=0;
+            $('result').classList.remove('show');
+            $('questions').classList.remove('hide');
+            render(false);
+        }
+
+        render(false);
+    </script>
+</body>
+</html>
